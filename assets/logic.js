@@ -1,5 +1,5 @@
 $(document).ready(function () {
-   
+
 
     // Initialize Firebase
     var config = {
@@ -19,13 +19,17 @@ $(document).ready(function () {
     $("#addTrain").on("click", function (event) {
         event.preventDefault();
 
+
         var name = $("#name").val().trim();
         var city = $("#city").val().trim();
         var trainTime = $("#time").val().trim();
         var freq = $("#freq").val().trim();
+        $("#name").val("");
+        $("#city").val("");
+        $("#time").val("");
+        $("#freq").val("");
 
-
-        database.ref().push({
+        database.ref("trains").push({
             name: name,
             city: city,
             trainTime: trainTime,
@@ -35,32 +39,47 @@ $(document).ready(function () {
 
     });
 
-    function updateDOM(){
-    database.ref().on("child_added", function (snapshot) {
+    function updateDOM() {
+        database.ref("trains").on("child_added", function (snapshot) {
 
-        var freqInt = parseInt(snapshot.val().freq);
-        var arrivalTime = moment(snapshot.val().trainTime, "HH:mm").subtract(1, "years");
-        var diffTime = moment().diff(moment(arrivalTime), "minutes");
-        var tRemainder = diffTime % freqInt;
-        var tMinutesTillTrain = freqInt - tRemainder;
-        var nextTrain = moment().add(tMinutesTillTrain, "minutes"); 
+            var freqInt = parseInt(snapshot.val().freq);
+            var arrivalTime = moment(snapshot.val().trainTime, "HH:mm").subtract(1, "years");
+            var diffTime = moment().diff(moment(arrivalTime), "minutes");
+            var tRemainder = diffTime % freqInt;
+            var tMinutesTillTrain = freqInt - tRemainder;
+            var nextTrain = moment().add(tMinutesTillTrain, "minutes");
 
-        var newRow = $("<tr>");
-        var name = $("<td>").text(snapshot.val().name);
-        var city = $("<td>").text(snapshot.val().city);
-        var freq = $("<td>").text(snapshot.val().freq);
-        var next = $("<td>").text(moment(nextTrain).format("hh:mm"));
-        var until = $("<td>").text(tMinutesTillTrain)
-        newRow.append(name, city, freq, next, until);
-        $("#trainTable").append(newRow);
+            // var trainKey = firebase.database().ref().push().key;
+
+            // var edit = $("<button>").text("✎").attr("data-key", trainKey).addClass("edit");;
+            // var deletebtn = $("<button>").text("x").attr("data-key", trainKey).addClass("delete");
 
 
-    })};
+            var newRow = $("<tr>");
+            var name = $("<td>").text(snapshot.val().name);
+            var city = $("<td>").text(snapshot.val().city);
+            var freq = $("<td>").text(snapshot.val().freq);
+            var next = $("<td>").text(moment(nextTrain).format("hh:mm"));
+            var until = $("<td>").text(tMinutesTillTrain)
+            newRow.append(name, city, freq, next, until, /*edit, deletebtn*/);
+            $("#trainTable").append(newRow);
+
+
+        })
+    };
     updateDOM();
 
-    setInterval(function(){
+    setInterval(function () {
         $("#trainTable").empty();
         updateDOM();
 
-        }, 60000);
+    }, 60000);
+
+    // $('body').on("click", ".delete", function () {
+    //     var key = $(this).attr("data-key");
+    //     console.log(key)
+    //     database.ref("trains").update({key : null});
+        
+       
+    // })
 });

@@ -1,0 +1,32 @@
+/*
+font-family: 'Josefin Slab', serif;
+font-family: 'Quicksand', sans-serif;
+font-family: 'Josefin Sans', sans-serif;
+*/
+
+body{
+    font-family: 'Josefin Slab', serif;
+    background-image: url(pics/travelStampPatter.jpg)
+}
+
+.jumbotron{
+    font-family: 'Quicksand', sans-serif;
+    background-color: rgb(255, 255, 255, .9) 
+}
+
+thead{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+label{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+h2{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+form{
+    background-color: rgb(255, 255, 255, .9);
+    padding: 15px;
+}
